@@ -1,9 +1,9 @@
+// src/transactions/transactions.service.ts
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
+import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { Transaction } from './transaction.entity';
-
 
 @Injectable()
 export class TransactionsService {
@@ -12,7 +12,8 @@ export class TransactionsService {
     private transactionsRepository: Repository<Transaction>,
   ) {}
 
-  async addTransaction(transaction: Transaction): Promise<Transaction> {
+  async addTransaction(createTransactionDto: CreateTransactionDto): Promise<Transaction> {
+    const transaction = this.transactionsRepository.create(createTransactionDto);
     return this.transactionsRepository.save(transaction);
   }
 
@@ -24,7 +25,7 @@ export class TransactionsService {
     return this.transactionsRepository.findOneBy({ id });
   }
 
-  async updateTransaction(id: number, updatedTransaction: Partial<Transaction>): Promise<Transaction> {
+  async updateTransaction(id: number, updatedTransaction: Partial<CreateTransactionDto>): Promise<Transaction> {
     await this.transactionsRepository.update(id, updatedTransaction);
     return this.transactionsRepository.findOneBy({ id });
   }
